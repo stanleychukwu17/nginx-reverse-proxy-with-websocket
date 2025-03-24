@@ -15,10 +15,6 @@ app.get('/', (req, res) => {
     res.send(`Hello world ${hostname}`);
 });
 
-app.listen(port, () => {
-    console.log(`Example app with: ${hostname}, listening on port ${port}!`);
-});
-
 // WebSocket connection handling
 web_socket_server.on('connection', (ws) => {
     console.log('Client connected');
@@ -31,4 +27,9 @@ web_socket_server.on('connection', (ws) => {
     ws.on('close', () => {
         console.log('Client disconnected');
     });
+});
+
+// Start express server
+app.listen(port, () => {
+    console.log(`Example app with: ${hostname}, listening on port ${port}!`);
 });
