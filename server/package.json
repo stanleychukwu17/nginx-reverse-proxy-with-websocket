@@ -13,6 +13,6 @@
   "description": "",
   "dependencies": {
     "express": "^4.21.2",
-    "ws": "^8.18.1"
+    "websocket": "^1.0.35"
   }
 }
