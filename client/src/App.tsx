@@ -1,9 +1,13 @@
 import './App.css'
+import { WebSocketProvider } from './context/WebSocketContext';
+import Chat from './components/Chat'
 
 function App () {
     return (
         <div>
-            <h1>App1</h1>
+            <WebSocketProvider>
+                <Chat />
+            </WebSocketProvider>
         </div>
     )
 }
