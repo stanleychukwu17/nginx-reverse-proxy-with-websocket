@@ -4,23 +4,21 @@ type WebSocketContextType = {
     sendMessage: (message: string) => void
     messages: string[]
 }
-
 export const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined)
 
 type WebSocketProviderProps = {
     children: React.ReactNode
 }
-
 export const WebSocketProvider = ({children}: WebSocketProviderProps) => {
     const [messages, setMessages] = useState<string[]>([])
-    const ws = useRef<WebSocket | null>(null);
+    const ws = useRef<WebSocket>({} as WebSocket);
 
     useEffect(() => {
         ws.current = new WebSocket('ws://localhost:9000'); // Connect to WebSocket server
 
         ws.current.onopen = () => {
             console.log('WebSocket connected');
-            ws.current?.send("Hello, Server!"); // Ensure you're sending some data to keep the connection active
+            ws.current.send("Hello, Server!"); // Ensure you're sending some data to keep the connection active
         };
 
         ws.current.onmessage = (event) => {
@@ -36,12 +34,12 @@ export const WebSocketProvider = ({children}: WebSocketProviderProps) => {
         };
 
         return () => {
-            ws.current?.close();
+            ws.current.close();
         }
     }, [])
 
     const sendMessage = (message: string) => {
-        if (ws.current?.readyState === WebSocket.OPEN) {
+        if (ws.current.readyState === WebSocket.OPEN) {
             ws.current.send(message)
         } else {
             alert('WebSocket is not open')
