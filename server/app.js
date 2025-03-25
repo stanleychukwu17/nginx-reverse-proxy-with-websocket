@@ -1,12 +1,10 @@
-// import express and use it
 import os from "os"
 import { server as WebSocketServer } from 'websocket';
 import { createServer } from 'http';
 
 const port = 9000
-const hostname = os.hostname
-// const app = express();
 
+// creates a http server
 const server = createServer(function(req, res) {
     console.log((new Date()) + ' Received request for ' + req.url);
 
@@ -17,15 +15,14 @@ const server = createServer(function(req, res) {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('Not Found');
     }
-
 });
 
-// Start express server
+// Start http server
 server.listen(port, () => {
-    console.log(`Example app with: ${hostname}, listening on port ${port}!`);
+    console.log(`Example app with: ${os.hostname}, listening on port ${port}!`);
 });
 
-
+// create the websocket server. we pass in the http server
 const wsServer = new WebSocketServer({
     httpServer: server,
     // You should not use autoAcceptConnections for production
@@ -36,7 +33,12 @@ const wsServer = new WebSocketServer({
     autoAcceptConnections: false
 });
 
-// logic to see if the request from the origin is allowed
+
+/**
+     * Checks if the given origin is allowed to connect to the WebSocket server.
+     * @param {string} origin The origin to check.
+     * @return {boolean} True if the origin is allowed, false otherwise.
+*/
 function originIsAllowed(origin) {
     if (origin.search("http://localhost") >= 0) {
         return true;
@@ -45,6 +47,7 @@ function originIsAllowed(origin) {
     return false;
 }
 
+// This callback is called for each incoming connection.
 wsServer.on('request', function(request) {
     if (!originIsAllowed(request.origin)) {
         // Make sure we only accept requests from an allowed origin
@@ -53,10 +56,11 @@ wsServer.on('request', function(request) {
         return;
     }
 
+    // accepts the connection
     var connection = request.accept(null, request.origin);
-
     console.log((new Date()) + ' Connection accepted.');
 
+    // send the client a message whenever the server receives one
     connection.on('message', function(message) {
         if (message.type === 'utf8') {
             console.log('Received Message: ' + message.utf8Data);
@@ -68,6 +72,7 @@ wsServer.on('request', function(request) {
         }
     });
 
+    // if the request is closed
     connection.on('close', function(reasonCode, description) {
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
     });
