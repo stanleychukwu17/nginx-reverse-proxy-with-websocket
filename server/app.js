@@ -1,5 +1,4 @@
 // import express and use it
-import express from 'express';
 import os from "os"
 import { server as WebSocketServer } from 'websocket';
 import { createServer } from 'http';
