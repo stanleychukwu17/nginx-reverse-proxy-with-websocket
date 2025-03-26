@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  # for the frontend servers
+  frontend_1:
+    image: frontend_websocket_img:v2
+    container_name: frontend_1
+    hostname: frontend_1
+    networks:
+      - nginx_network
+    depends_on:
+      - backend_1
+      - backend_2
+  frontend_2:
+    image: frontend_websocket_img:v2
+    container_name: frontend_2
+    hostname: frontend_2
+    networks:
+      - nginx_network
+    depends_on:
+      - backend_1
+      - backend_2
+
+  # for the backend servers
+  backend_1:
+    image: backend_websocket_img:v1
+    container_name: backend_1
+    hostname: backend_1
+    networks:
+      - nginx_network
+
+  backend_2:
+    image: backend_websocket_img:v1
+    container_name: backend_2
+    hostname: backend_2
+    networks:
+      - nginx_network
+  
+  # for the reverse proxy
+  nginx_websocket:
+    image: nginx:1.26.3
+    container_name: nginx_websocket
+    hostname: nginx_websocket_host
+    ports:
+      - 80:80
+    networks:
+      - nginx_network
+    volumes:
+      - "/d/Sz - projects/28-devops/3-nginx/1-hussien-nasser-introduction-to-nginx/nginx-reverse-proxy-with-websocket/nginx-layer7.conf:/etc/nginx/nginx.conf"
+    depends_on:
+      - frontend_1
+      - frontend_2
+      - backend_1
+      - backend_2
+
+networks:
+  nginx_network:
+    driver: bridge
