@@ -1,4 +1,4 @@
-import os from "os"
+import os, { hostname } from "os"
 import { server as WebSocketServer } from 'websocket';
 import { createServer } from 'http';
 
@@ -19,7 +19,7 @@ const server = createServer(function(req, res) {
 
 // Start http server
 server.listen(port, () => {
-    console.log(`Example app with: ${os.hostname}, listening on port ${port}!`);
+    console.log(`Example app with: ${hostname}, listening on port ${port}!`);
 });
 
 // create the websocket server. we pass in the http server
@@ -35,9 +35,9 @@ const wsServer = new WebSocketServer({
 
 
 /**
-     * Checks if the given origin is allowed to connect to the WebSocket server.
-     * @param {string} origin The origin to check.
-     * @return {boolean} True if the origin is allowed, false otherwise.
+    - Checks if the given origin is allowed to connect to the WebSocket server.
+    - @param {string} origin The origin to check.
+    - @return {boolean} True if the origin is allowed, false otherwise.
 */
 function originIsAllowed(origin) {
     if (origin.search("http://localhost") >= 0) {
@@ -63,17 +63,17 @@ wsServer.on('request', function(request) {
     // send the client a message whenever the server receives one
     connection.on('message', function(message) {
         if (message.type === 'utf8') {
-            console.log('Received Message: ' + message.utf8Data);
-            connection.sendUTF(message.utf8Data);
+            console.log(`Received Message: ${message.utf8Data} on server ${hostname}`);
+            connection.sendUTF(`${message.utf8Data} on server ${hostname}`);
         }
         else if (message.type === 'binary') {
-            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+            console.log(`Received Binary Message of ${message.binaryData.length} bytes`);
             connection.sendBytes(message.binaryData);
         }
     });
 
     // if the request is closed
     connection.on('close', function(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+        console.log(`${(new Date())} Peer ${connection.remoteAddress} disconnected.`);
     });
 });
