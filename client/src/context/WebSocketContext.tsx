@@ -1,4 +1,7 @@
-import { createContext, useEffect, useState, useRef } from "react";
+import { createContext, useEffect, useState, useRef, useCallback } from "react";
+import { w3cwebsocket as WebSocketClient } from "websocket"; // Use w3cwebsocket
+
+// console.log(websocket, websocket.w3cwebsocket)
 
 type WebSocketContextType = {
     sendMessage: (message: string) => void
@@ -11,44 +14,50 @@ type WebSocketProviderProps = {
 }
 export const WebSocketProvider = ({children}: WebSocketProviderProps) => {
     const [messages, setMessages] = useState<string[]>([])
+    const [isOpen, setIsOpen] = useState<boolean>(false); // Track WebSocket connection status
     const ws = useRef<WebSocket>({} as WebSocket);
 
+    const connectWebsocket = useCallback(() => {
+        const socket = new WebSocketClient("ws://localhost:9000/", "echo-protocol"); // Correct constructor
+
+        socket.onopen = () => {
+            console.log("WebSocket Client Connected");
+            socket.send("keep man open")
+            setIsOpen(true); // Set connection status to true when connected
+        };
+        
+        socket.onclose = () => {
+            console.log("echo-protocol Connection Closed");
+            setIsOpen(false); // Update connection status when closed
+        };
+        
+        socket.onerror = (error) => {
+            console.log("Connection Error: " + error.message);
+        };
+        
+        socket.onmessage = (message) => {
+            console.log("Received: '" + message.data + "'");
+            const msg: string[] = [...messages, message.data as string]
+            setMessages(msg);
+        };
+
+    }, [])
+
     useEffect(() => {
-        ws.current = new WebSocket('ws://localhost:9000'); // Connect to WebSocket server
-
-        ws.current.onopen = () => {
-            console.log('WebSocket connected');
-            ws.current.send("Hello, Server!"); // Ensure you're sending some data to keep the connection active
-        };
-
-        ws.current.onmessage = (event) => {
-            setMessages((prev) => [...prev, event.data]);
-        };
-
-        ws.current.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
-      
-        ws.current.onclose = () => {
-            console.log('WebSocket disconnected');
-        };
-
-        return () => {
-            ws.current.close();
-        }
+        connectWebsocket()
     }, [])
 
     const sendMessage = (message: string) => {
-        if (ws.current.readyState === WebSocket.OPEN) {
-            ws.current.send(message)
-        } else {
-            alert('WebSocket is not open')
+        if (isOpen) {
+            ws.current.send(message); // Send the message only if the connection is open
         }
     }
 
     return (
         <WebSocketContext.Provider value={{sendMessage, messages}}>
-            {children}
+            <>
+                {children}
+            </>
         </WebSocketContext.Provider>
     )
 }
