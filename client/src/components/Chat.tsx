@@ -3,11 +3,14 @@ import { useState } from "react"
 // create an array and fill it with messages
 const arr: {name: string}[] = new Array(12).fill({ name: "John" });
 
+type chatProps = {
+    username: string
+}
 
-function Chat () {
+function Chat ({username}: chatProps) {
     const [msgToSend, setMsgToSend] = useState<string>('')
-    const [allChats, setAllChats] = useState<[]>([])
-    const [newChat, setNewChat] = useState<[]>([])
+    // const [allChats, setAllChats] = useState<[]>([])
+    // const [newChat, setNewChat] = useState<[]>([])
 
 
 
@@ -20,7 +23,7 @@ function Chat () {
 
     return (
         <div className="Chat">
-            <h2>Nginx Group Chat</h2>
+            <h3>Hey {username}, Welcome to Nginx Group Chat</h3>
             <div className="chat_cvr">
                 {
                     arr.map((_, index) => {
