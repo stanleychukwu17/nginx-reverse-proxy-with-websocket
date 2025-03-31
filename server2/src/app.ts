@@ -22,11 +22,11 @@ const users: {
     }
 } = {}
 
-
 // sends the latest message received to everyone connected to the websocket
-const handleMessageReceived = (message: string, username: string) => {
+const handleMessageReceived = (msg_in_bytes: string, username: string) => {
+    const msg = JSON.parse(msg_in_bytes.toString())
     Object.keys(connections).forEach((uuid) => {
-        const toSend = { username, message }
+        const toSend = { username, msg }
         connections[uuid].send(JSON.stringify(toSend))
     })
 }
