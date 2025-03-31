@@ -1,39 +1,69 @@
 import { useState } from "react"
 
 // create an array and fill it with messages
-const arr: {name: string}[] = new Array(50).fill({ name: "John" });
+const arr: {name: string}[] = new Array(12).fill({ name: "John" });
 
 
 function Chat () {
-    const [message, setMessage] = useState<string>('')
+    const [msgToSend, setMsgToSend] = useState<string>('')
+    const [allChats, setAllChats] = useState<[]>([])
+    const [newChat, setNewChat] = useState<[]>([])
 
-    // if the websocket is not ready, do not render
 
-    // destructure the sendMessage and messages from the context, so we can use them in the component
-    // the sendMessage is a function that sends a message to the server & messages is an array of messages from the server
 
     // handleSend function sends the message to the server by calling the "sendMessage" function
     const handleSend = () => {
-        if (message.trim()) {
-            setMessage('');
+        if (msgToSend.trim()) {
+            setMsgToSend('');
         }
     };
 
     return (
-        <div>
-            <h1>Group Chat, Nginx!!!</h1>
-            <div>
+        <div className="Chat">
+            <h2>Nginx Group Chat</h2>
+            <div className="chat_cvr">
                 {
-                    arr.map((msg, index) => {
-                        return (<div key={index}>{msg.name}</div>)
+                    arr.map((_, index) => {
+                        return (
+                            <div key={index} className="Not_Me">
+                                <div className="avatar">S</div>
+                                <div className="msg_cvr">
+                                    <div className="msg_dts">
+                                        destructure the sendMessage and messages from the context, so we can use them in the component
+                                        the sendMessage is a function that sends a message to the server & messages is an array of messages from the server
+                                    </div>
+                                    <div className="msg_name">
+                                        stanley chukwu
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                {
+                    arr.map((_, index) => {
+                        return (
+                            <div key={index} className="This_Me ">
+                                <div className="msg_cvr">
+                                    <div className="msg_dts">
+                                        destructure the sendMessage and messages from the context, so we can use them in the component
+                                        the sendMessage is a function that sends a message to the server & messages is an array of messages from the server
+                                    </div>
+                                    <div className="msg_name">
+                                        stanley chukwu
+                                    </div>
+                                </div>
+                                <div className="avatar">S</div>
+                            </div>
+                        )
                     })
                 }
             </div>
             <div className="input_cvr">
                 <input
                     type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    value={msgToSend}
+                    onChange={(e) => setMsgToSend(e.target.value)}
                     placeholder="Type a message..."
                 />
                 <button onClick={handleSend}>Send</button>
