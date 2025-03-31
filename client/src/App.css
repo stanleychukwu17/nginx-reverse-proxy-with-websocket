@@ -22,7 +22,7 @@
 
         .Not_Me, .This_Me {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: flex-end;
             margin: 10px 0;
             width: 75%;
@@ -38,6 +38,7 @@
                 border-radius: 200px;
                 text-align: center;
                 font-weight: bold;
+                text-transform: capitalize;
             }
     
             .msg_cvr {
@@ -59,9 +60,9 @@
         }
     
         .This_Me {
-            display: flex;
             align-self: flex-end;
             align-items: flex-end;
+            justify-content: flex-end;
     
             .avatar {
                 margin: 0 0 29px 10px;

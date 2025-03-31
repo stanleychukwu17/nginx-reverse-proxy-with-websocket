@@ -3,13 +3,15 @@ import './App.css'
 import Chat from './components/Chat'
 import Login from './components/Login'
 
+export type userType = {username: string, uuid: string}
+
 function App () {
-    const [username, setUsername] = useState<string>('')
+    const [userDetails, setUserDetails] = useState<userType>({username: '', uuid: ''})
 
     return (
         <div className='mainCvr'>
-            {!username && <Login updateUsername={setUsername} />}
-            {username && <Chat username={username} />}
+            {!userDetails.uuid && <Login updateUserDetails={setUserDetails} />}
+            {userDetails.uuid && <Chat userDetails={userDetails} />}
         </div>
     )
 }
