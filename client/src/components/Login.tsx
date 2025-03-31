@@ -1,11 +1,14 @@
 import { useState } from "react"
+import { v4 as v4_uuid } from 'uuid';  // Import v4 from uuid
+
 import "./Login.css"
+import { userType } from "../App"
 
 type LoginProps = {
-    updateUsername: (username: string) => void
+    updateUserDetails: React.Dispatch<React.SetStateAction<userType>>
 }
 
-export default function Login({updateUsername}: LoginProps) {
+export default function Login({updateUserDetails}: LoginProps) {
     const [username, setUsername] = useState<string>('')
 
     return (
@@ -14,7 +17,7 @@ export default function Login({updateUsername}: LoginProps) {
                 className="form_cvr"
                 onSubmit={(e) => {
                     e.preventDefault()
-                    updateUsername(username)
+                    updateUserDetails({username, uuid: v4_uuid()})
                 }}
             >
                 <div className="title"><h2>Login</h2></div>
