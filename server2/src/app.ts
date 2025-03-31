@@ -45,19 +45,18 @@ wsServer.on("connection", (connection, request: http.IncomingMessage) => {
     // check if you allow connections from the origin below
     const origin = request.headers.origin
 
-    const {username} = url.parse(request.url!, true).query
-    const uuid = uuidV4()
+    const {username, uuid} = url.parse(request.url!, true).query
 
     console.log(`new connection from ${username}`, uuid)
 
     // if the request looks something like ?username=stanley&username=mike, we reject the connection request
     // we only want one username per connection
-    if (typeof username !== "string") {
-        connection.close(4000, 'Invalid username provided'); // 4000 is a custom WebSocket close code
+    if (typeof username !== "string" || typeof uuid !== "string") {
+        connection.close(4000, 'Invalid username or user_id provided'); // 4000 is a custom WebSocket close code
         return
     }
-    if (username.length <= 3) {
-        connection.close(4000, 'Username too short'); // 4000 is a custom WebSocket close code
+    if (username.length <= 3 || uuid.length <= 3) {
+        connection.close(4000, 'Username or user_id too short'); // 4000 is a custom WebSocket close code
         return
     }
 
