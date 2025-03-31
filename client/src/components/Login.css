@@ -1,0 +1,45 @@
+.login_cvr {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    height: 90vh;
+    align-items: center;
+    justify-content: center;
+
+    .title {
+        h2 {
+            margin: 10px 0;
+        }
+    }
+
+    .input_cvr {
+        margin: 15px 0 18px;
+
+        input {
+            border: 0;
+            outline: 0;
+            padding: 10px 15px;
+            background-color: #ccc;
+            color: #000;
+            font-weight: bold;
+            border-radius: 4px;
+            font-size: 14px;
+            text-transform: lowercase;
+        }
+        input::placeholder {
+            color: #8a8686;
+        }
+    }
+
+    .btn_cvr {
+        button {
+            background-color: #222222;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: 0;
+            font-size: 13px;
+            font-weight: bold;
+        }
+    }
+}
