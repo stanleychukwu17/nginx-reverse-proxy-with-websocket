@@ -1,10 +1,14 @@
+import { useState } from 'react'
 import './App.css'
 import Chat from './components/Chat'
 
 function App () {
+    const [username, setUsername] = useState<string>('')
+
     return (
         <div className='mainCvr'>
-            <Chat />
+            {!username && <Login />}
+            {username && <Chat />}
         </div>
     )
 }
